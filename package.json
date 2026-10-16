@@ -11,8 +11,7 @@
   "scripts": {
     "start": "node --env-file=.env src/server.js",
     "dev": "node --env-file=.env --watch src/server.js",
-    "check": "node --check src/server.js",
-    "build": "node --check src/server.js && node --check api/index.js"
+    "check": "node --check src/server.js && node --check api/index.js"
   },
   "dependencies": {
     "@fastify/compress": "^9.2.2",
