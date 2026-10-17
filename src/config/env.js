@@ -50,6 +50,12 @@ export const env = {
     timeoutMs: int("GEMINI_TIMEOUT_MS", 120_000),
   },
 
+  // First ERP Admin Portal administrator, created only while no ERP users exist.
+  erpAdmin: {
+    email: read("ERP_ADMIN_EMAIL"),
+    password: read("ERP_ADMIN_PASSWORD"),
+  },
+
   website: {
     revalidateUrl: read("WEBSITE_REVALIDATE_URL"),
     revalidateSecret: read("WEBSITE_REVALIDATE_SECRET"),
@@ -62,5 +68,6 @@ export function assertConfig() {
   if (!env.mongo.uri) problems.push("MONGODB_URI is required");
   if (env.apiKeys.length === 0) problems.push("ERP_API_KEYS needs at least one key");
   if (env.isProduction && env.apiKeys.some((k) => k.length < 32)) problems.push("ERP_API_KEYS must be at least 32 characters each in production");
+  if (env.erpAdmin.password && env.erpAdmin.password.length < 8) problems.push("ERP_ADMIN_PASSWORD must be at least 8 characters");
   if (problems.length) throw new Error(`Invalid configuration:\n  - ${problems.join("\n  - ")}`);
 }

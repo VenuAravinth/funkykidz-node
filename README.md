@@ -106,7 +106,21 @@ Every `/api/v1` route needs an API key from `ERP_API_KEYS`:
 | POST | `/api/v1/products/bulk/publish` | `{ ids: [], published: true }` |
 | POST | `/api/v1/products/maintenance/backfill` | Re-run the pre-ERP backfill |
 
-### Categories & brands
+### ERP users
+Accounts that sign in to the ERP Admin Portal, in the `erp_users` collection (the website's `users` are shop customers). Passwords are scrypt hashes and never leave this server. On first start, with no ERP users yet, `ERP_ADMIN_EMAIL` / `ERP_ADMIN_PASSWORD` create the first administrator (`role_administrator`).
+
+| Method | Path | Notes |
+|---|---|---|
+| GET | `/api/v1/users` | List. Query params: `q` (username/email), `status`, `roleId`, `sort` (`username_asc`, `newest`, `last_login`), `page`, `limit` (≤ 200) |
+| POST | `/api/v1/users` | `{ username, email, password, roleId, staffId?, status? }`. Username (ignoring case) and email are unique |
+| GET | `/api/v1/users/:id` | Details |
+| PATCH | `/api/v1/users/:id` | Any of `username`, `email`, `roleId`, `staffId`, `status`. Deactivating, a new role or a new email signs the user out everywhere. The last active administrator can't be deactivated or demoted (409) |
+| PUT | `/api/v1/users/:id/password` | `{ password }`. Signs the user out everywhere |
+| POST | `/api/v1/users/:id/sign-out` | Signs the user out everywhere |
+| POST | `/api/v1/users/authenticate` | `{ email, password }` → `{ user, auth }`. 401 wrong credentials, 403 deactivated, 429 after 5 wrong passwords (15-minute lock) |
+| GET · PATCH | `/api/v1/users/:id/auth` | Sign-in state the portal keeps here: authenticator secret, pending email code (hash only), session version. Portal server only |
+
+
 `/api/v1/categories` and `/api/v1/brands` have the same endpoints:
 
 | Method | Path | Notes |

@@ -3,6 +3,7 @@ import productRoutes from "./product.routes.js";
 import imageRoutes from "./image.routes.js";
 import publicRoutes from "./public.routes.js";
 import aiRoutes from "./ai.routes.js";
+import userRoutes from "./user.routes.js";
 import { brandRoutes, categoryRoutes } from "./taxonomy.routes.js";
 
 export default async function apiV1(app) {
@@ -17,5 +18,6 @@ export default async function apiV1(app) {
     admin.register(categoryRoutes, { prefix: "/categories" });
     admin.register(brandRoutes, { prefix: "/brands" });
     admin.register(aiRoutes, { prefix: "/ai" });
+    admin.register(userRoutes, { prefix: "/users" });
   });
 }
